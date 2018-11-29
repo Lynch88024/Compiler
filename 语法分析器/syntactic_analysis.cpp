@@ -17,6 +17,19 @@ string code_str[1000];
 int x = 0; // x是单词数组中的计数器
 int sym = 52; // sym是该单词的种别码
 
+struct val  // 变量结构体   符号表结构
+{
+    string name; // 变量名
+    int type;  // 种别码
+    string value; // 值
+};
+val V[1500];
+
+
+
+
+
+
 /*----文法函数声明----*/   
 void A(); // <主函数> -> int main()<语句块> 
 void C(); // <函数> -> <所有类型> <函数名>()<语句块>

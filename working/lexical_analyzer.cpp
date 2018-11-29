@@ -4,21 +4,21 @@
 #include <math.h>
 using namespace std;  
 
-/*输入输出文件*/
+/*??????????*/
 char file_in[] = "./test1.c"; 
 char file_out[] = "./test1_Analysis.txt"; 
-/*读取字符、种别码、字符串存储数组*/
+/*?????????????????????????*/
 char ch; 
 char token[10]; 
 int syn = 52; 
-/*全局变量*/
+/*??????*/
 int n = 0;
 int m = 0;
 int sum_int = 0;
 float sum_float = 0.0;
-int row = 1; //文件第几行
-/*保留字*/
-const int reserve_num = 17; //保留字个数
+int row = 1; //????????
+/*??????*/
+const int reserve_num = 17; //?????????
 char reserve[reserve_num][10] = 
 {
     "main", "return",
@@ -30,14 +30,14 @@ char reserve[reserve_num][10] =
 
 void scan(FILE *fp)
 {
-    /*1.标识符 or 保留字 2.数字 3.负数 4.符号*/
+    /*1.????? or ?????? 2.???? 3.???? 4.????*/
     for(n=0; n<10; n++)
-        token[n] = '\0'; //每次读取字符前清空数组
-    ch = fgetc(fp); //从文件中读取字符
+        token[n] = '\0'; //?????????????????
+    ch = fgetc(fp); //?????????????
     while(ch==' '||ch=='\t')
-        ch = fgetc(fp); //跳过空白字符
+        ch = fgetc(fp); //??????????
  
-    /*1.标识符 or 保留字*/
+    /*1.????? or ??????*/
     if((ch>='a'&&ch<='z')||(ch>='A'&&ch<='Z'))
     {
         m = 0;
@@ -46,17 +46,17 @@ void scan(FILE *fp)
             token[m++] = ch;
             ch = fgetc(fp);
         }while((ch>='a'&&ch<='z')||(ch>='A'&&ch<='Z')||(ch>='0'&&ch<='9')||(ch=='_'));
-        fseek(fp, -1, SEEK_CUR); //单词读取结束，退回到最后读取到的字符前位置
-        token[m] = '\0'; //单词读取结束
-        syn = 21; //标识符 种别码
+        fseek(fp, -1, SEEK_CUR); //?????????????????????????????????
+        token[m] = '\0'; //??????????
+        syn = 21; //????? ?????
         for(n=0; n<reserve_num; n++)
-            if(strcmp(token, reserve[n])==0) //判断是否为保留字
+            if(strcmp(token, reserve[n])==0) //??????????????
             {
-                syn = n+1; //保留字 种别码
+                syn = n+1; //?????? ?????
                 break;
             }
     }
-    /*2.数字*/
+    /*2.????*/
     else if(ch>='0' && ch<='9')
     {
         sum_int = 0;
@@ -66,13 +66,13 @@ void scan(FILE *fp)
             sum_int = sum_int * 10 + ch - '0';
             ch = fgetc(fp);
         }
-        if(sum_int > 2147483647) //超过整形数最大表示范围
-            syn = -1; //出错
+        if(sum_int > 2147483647) //???????????????????
+            syn = -1; //????
         else 
         {
-            if(ch == '.') //识别到小数点
+            if(ch == '.') //?????????
             {
-                int cnt = 0; //小数点位数计数
+                int cnt = 0; //??????????????
                 sum_float = float(sum_int);
                 ch = fgetc(fp);
                 while(ch>='0' && ch<='9')
@@ -80,28 +80,28 @@ void scan(FILE *fp)
                     sum_float += (ch-'0') / pow(10, ++cnt);
                     ch = fgetc(fp);
                 }
-                syn = 23; //浮点型常数
+                syn = 23; //?????????
             }
             else
-                syn = 22; //整型常数   
+                syn = 22; //???????   
         }
         fseek(fp, -1, SEEK_CUR);
     }
-    /*3.负数*/
+    /*3.????*/
     else if(ch == '-')
     {
         fseek(fp, -2, SEEK_CUR); 
-        ch = fgetc(fp); //检查'-'前字符
-        if(ch>='0' && ch<='9') //'-'前有数字，表示减号，是符号类型
+        ch = fgetc(fp); //???'-'????
+        if(ch>='0' && ch<='9') //'-'?????????????????????????
         {
             ch = fgetc(fp);
-            token[0] = ch; //将'-'存入数组中
-            syn = 32; //'-'的种别码
+            token[0] = ch; //??'-'??????????
+            syn = 32; //'-'???????
         }
         else
         {
-            fseek(fp, 1, SEEK_CUR); //跳过'-'字符
-            ch = fgetc(fp); //'-'后字符
+            fseek(fp, 1, SEEK_CUR); //????'-'???
+            ch = fgetc(fp); //'-'?????
             if(ch>='0' && ch<='9')
             {
                 sum_int = 0;
@@ -111,13 +111,13 @@ void scan(FILE *fp)
                     sum_int = sum_int * 10 + ch - '0';
                     ch = fgetc(fp);
                 }
-                if(sum_int > 2147483647) //超过整形数最大表示范围
-                    syn = -1; //出错
+                if(sum_int > 2147483647) //???????????????????
+                    syn = -1; //????
                 else 
                 {
-                    if(ch == '.') //识别到小数点
+                    if(ch == '.') //?????????
                     {
-                        int cnt = 0; //小数点位数计数
+                        int cnt = 0; //??????????????
                         sum_float = float(sum_int);
                         ch = fgetc(fp);
                         while(ch>='0' && ch<='9')
@@ -125,30 +125,30 @@ void scan(FILE *fp)
                             sum_float += (ch-'0') / pow(10, ++cnt);
                             ch = fgetc(fp);
                         }
-                        sum_float = -sum_float; //负数去反
-                        syn = 23; //浮点型常数
+                        sum_float = -sum_float; //???????
+                        syn = 23; //?????????
                     }
                     else
                     {
-                        sum_int = -sum_int; //负数去反
-                        syn = 22; //整型常数
+                        sum_int = -sum_int; //???????
+                        syn = 22; //???????
                     }  
                 }
                 fseek(fp, -1, SEEK_CUR);
             }
         }
     }
-    /*4.符号*/
+    /*4.????*/
     else switch(ch)
     {
         case'/': token[0] = ch;
                  ch = fgetc(fp);
-                 if(ch == '/') //"//"注释符
+                 if(ch == '/') //"//"????
                  {
                      while(fgetc(fp) != '\n');
-                     syn = -3; // 注释 的种别码
+                     syn = -3; // ??? ???????
                  }
-                 else if(ch == '*') // "/**/"注释符
+                 else if(ch == '*') // "/**/"????
                  {
                      while(1)
                      {
@@ -156,11 +156,11 @@ void scan(FILE *fp)
                          if(fgetc(fp) == '/')
                             break;
                      }   
-                     syn = -3; // 注释 的种别码               
+                     syn = -3; // ??? ???????               
                  }
                  else
                  {
-                     syn = 34; // '/' 的种别码
+                     syn = 34; // '/' ???????
                      fseek(fp, -1, SEEK_CUR);
                  }
                  break;
@@ -169,11 +169,11 @@ void scan(FILE *fp)
                  if(ch == '=')
                  {
                      token[1] = ch;
-                     syn = 39; // <= 的种别码
+                     syn = 39; // <= ???????
                  }
                  else
                  {
-                     syn = 37; // < 的种别码
+                     syn = 37; // < ???????
                      fseek(fp, -1, SEEK_CUR);
                  }
                  break;
@@ -182,11 +182,11 @@ void scan(FILE *fp)
                  if(ch == '=')
                  {
                      token[1] = ch;
-                     syn = 41; // >= 的种别码
+                     syn = 41; // >= ???????
                  }
                  else
                  {
-                     syn = 40; // > 的种别码
+                     syn = 40; // > ???????
                      fseek(fp, -1, SEEK_CUR);
                  }
                  break;
@@ -195,11 +195,11 @@ void scan(FILE *fp)
                  if(ch == '=')
                  {
                      token[1] = ch;
-                     syn = 42; // == 的种别码
+                     syn = 42; // == ???????
                  }
                  else
                  {
-                     syn = 36; // = 的种别码
+                     syn = 36; // = ???????
                      fseek(fp, -1, SEEK_CUR);
                  }
                  break;
@@ -208,11 +208,11 @@ void scan(FILE *fp)
                  if(ch == '=')
                  {
                      token[1] = ch;
-                     syn = 38; // != 的种别码
+                     syn = 38; // != ???????
                  }
                  else
                  {
-                     syn = 43; // ! 的种别码
+                     syn = 43; // ! ???????
                      fseek(fp, -1, SEEK_CUR);
                  }
                  break;
@@ -267,19 +267,19 @@ void scan(FILE *fp)
         case'|': syn=57;
                  token[0]=ch;
                  break;
-        case'\n': syn=-2; //文件读取到换行符
+        case'\n': syn=-2; //??????????????
                   break;
-        case EOF: syn=0; //文件读取结束
+        case EOF: syn=0; //??????????
                   break; 
-        default:  syn=-1; //异常字符
+        default:  syn=-1; //?????
                   break; 
     }
 }
 
 int main()
 {
-    FILE *fp1 = fopen(file_in, "r");  //打开源代码文件
-    FILE *fp2 = fopen(file_out, "w"); //词法分析器输出文件
+    FILE *fp1 = fopen(file_in, "r");  //??????????
+    FILE *fp2 = fopen(file_out, "w"); //???????????????
     if(fp1 == NULL)
     {
         cout << "open the file_in failed!" << endl;
@@ -291,33 +291,33 @@ int main()
         exit(0);
     }
 
-    cout << "源程序" << endl;
-    while((ch = fgetc(fp1)) != EOF) //显示源程序内容
+    cout << "?????" << endl;
+    while((ch = fgetc(fp1)) != EOF) //????????????
         cout << ch;
 
     cout << endl << endl;
-    cout << "词法分析器输出" << endl;
-    fseek(fp1, 0L, SEEK_SET); //光标移至源代码文件开头
+    cout << "????????????" << endl;
+    fseek(fp1, 0L, SEEK_SET); //??????????????????
     
     scan(fp1);
     while(syn != 0)
     {
         switch(syn)
         {
-            case 22: cout << syn << " " << sum_int <<endl; //整型
+            case 22: cout << syn << " " << sum_int <<endl; //????
                      fprintf(fp2, "%d %d\n", syn, sum_int);
                      break;
-            case 23: cout <<syn << " " << sum_float <<endl; //浮点型
+            case 23: cout <<syn << " " << sum_float <<endl; //??????
                      fprintf(fp2, "%d %f\n", syn, sum_float);
                      break;
-            case -1: cout << "Error in row " << row << "!" << endl; //报错
+            case -1: cout << "Error in row " << row << "!" << endl; //????
                      fprintf(fp2, "Error in row %d!\n", row);
                      break;
-            case -2: row++; //增加行数
+            case -2: row++; //????????
                      break;
-            case -3: break; //注释部分
-            case 0:  break; //文件读取结束
-            default: cout << syn << " " << token << endl; //标识符 or 保留字
+            case -3: break; //??????
+            case 0:  break; //??????????
+            default: cout << syn << " " << token << endl; //????? or ??????
                      fprintf(fp2, "%d %s\n", syn, token);
                      break;
         }
