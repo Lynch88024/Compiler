@@ -38,37 +38,6 @@ string num_str(int num) // 整型 -> 字符串
     ss << num;
     return ss.str();
 }
-string num_str(double num) // 浮点型 -> 字符串
-{
-    stringstream ss;
-    ss << i;
-    return ss.str();
-}
-int str_int(string s) // 字符串 -> 整型
-{
-    int num;
-    stringstream ss;
-    ss << s;
-    ss >> num;
-    return num;
-}
-double str_double(string s) // 字符串 -> 浮点型
-{
-    double num;
-    stringstream ss;
-    ss << s;
-    ss >> num;
-    return num;
-}
-char str_char(string s) // 字符串 -> 字符
-{
-    double c; // !!!!!!!!!!?
-    stringstream ss;
-    ss << s;
-    ss >> c;
-    return c;
-}
-
 
 /*----文法函数声明----*/   
 void A(); // <主函数> -> int main() <语句块> 
@@ -140,16 +109,16 @@ void A() // -> 4 1 48 49 B
                     B();
                 }
                 else
-                    cout << "ERROR!  ')' missing" << endl;
+                    cout << "语法错误 未找到')'" << endl;
             }
             else
-                cout << "ERROR!  '(' missing" << endl;
+                cout << "语法错误 未找到'('" << endl;
         }
         else
-            cout << "ERROR!  'main' missing" << endl;
+            cout << "语法错误 未找到'main'" << endl;
     }
     else
-        cout << "ERROR!  ')' missing" << endl;
+        cout << "语法错误 未找到'int'" << endl;
 }
 
 void C() // -> D E 48 49 B
@@ -167,78 +136,62 @@ void C() // -> D E 48 49 B
             B();
         }
         else    
-            cout << "ERROR!  ')' missing" << endl;
+            cout << "语法错误 未找到')'" << endl;
     }
     else
-        cout << "ERROR!  '(' missing" << endl;
+        cout << "语法错误 未找到'('" << endl;
 }
 
-void D() // -> 3|4|5|6|7        可以改为case语句
+void D() // -> 3|4|5|6|7
 {
-    if(sym == 3)
+    switch(sym)
     {
-        cout << "'void' succeed " << endl;
-        sym = getsym();
+        case 3: cout << "'void' succeed " << endl;
+                sym = getsym();
+                break;
+        case 4: cout << "'int' succeed " << endl;
+                sym = getsym();
+                break;
+        case 5: cout << "'double' succeed " << endl;
+                sym = getsym();
+                break;
+        case 6: cout << "'char' succeed " << endl;
+                sym = getsym();
+                break;
+        case 7: cout << "'bool' succeed " << endl;
+                sym = getsym();
+                break;
+        default: cout << "语法错误 未找到<type>" << endl;
+                 break;
     }
-    else if(sym == 4)
-    {
-        cout << "'int' succeed " << endl;
-        sym = getsym();
-    }
-    else if(sym == 5)
-    {
-        cout << "'double' succeed " << endl;
-        sym = getsym();
-    }
-    else if(sym == 6)
-    {
-        cout << "'char' succeed " << endl;
-        sym = getsym();
-    }
-    else if(sym == 7)
-    {
-        cout << "'bool' succeed " << endl;
-        sym = getsym();
-    }
-    else
-        cout << "语法错误 未找到<type>" << endl;
 }
 
 void S() // -> 3|4|5|6
 {
-    if(sym == 3)
+    switch(sym)
     {
-        cout << "'void' succeed " << endl;
-        V[i].type = sym;
-        sym = getsym();
+        case 3: cout << "'void' succeed " << endl;
+                sym = getsym();
+                break;
+        case 4: cout << "'int' succeed " << endl;
+                sym = getsym();
+                break;
+        case 5: cout << "'double' succeed " << endl;
+                sym = getsym();
+                break;
+        case 6: cout << "'char' succeed " << endl;
+                sym = getsym();
+                break;
+        default: cout << "语法错误 未找到<type>" << endl;
+                 break;
     }
-    else if(sym == 4)
-    {
-        cout << "'int' succeed " << endl;
-        V[i].type = sym;
-        sym = getsym();
-    }
-    else if(sym == 5)
-    {
-        cout << "'double' succeed " << endl;
-        V[i].type = sym;
-        sym = getsym();
-    }
-    else if(sym == 6)
-    {
-        cout << "'char' succeed " << endl;
-        V[i].type = sym;
-        sym = getsym();
-    }
-    else
-        cout << "语法错误 未找到<type>" << endl;
 }
 
 void E() // -> 21    
 {
     if(sym == 21) 
     {
-        cout << "" << endl;
+        cout << "<变量名> succeed " << endl;
         sym = getsym();
     }
     else
@@ -264,10 +217,10 @@ void B() // -> 46 (B|F)* 47
             sym = getsym();
         }
         else
-            cout << "ERROR!  '}' missing" << endl;
+            cout << "语法错误 未找到'}'" << endl;
     }
     else
-        cout << "ERROR!  '{' missing" << endl;
+        cout << "语法错误 未找到'{'" << endl;
 }
 
 void F() // -> G G*
@@ -302,7 +255,7 @@ void O() // -> (S 21 ((36 K 44) | 44)) | (7 21 ((36 L 44) | 44))
         sym = getsym();
         if(sym == 21)
         {
-            cout << "'<变量>' succeed " << endl;
+            cout << "'<变量名>' succeed " << endl;
             if(get_num() != -1) // 自定义变量表中已经存在该变量
             {
                 cout << "语义错误 变量重复定义" << endl;
@@ -320,15 +273,14 @@ void O() // -> (S 21 ((36 K 44) | 44)) | (7 21 ((36 L 44) | 44))
                     cout << "语义错误 变量类型不匹配" << endl;
                     exit(0);
                 }
-                emit("=",V[i].name,(V[t].value.size())?V[t].value:V[t].name,"_");
-                i++; // chou!!!
+                emit("=","_",(V[t].value.size())?V[t].value:V[t].name,V[i++].name);
                 if(sym == 44)
                 {
                     cout << "';' succeed " << endl;
                     sym = getsym();
                 }
                 else    
-                    cout << "ERROR!  ';' missing" << endl;
+                    cout << "语法错误 未找到';'" << endl;
             }       
             else if(sym == 44)
             {
@@ -337,7 +289,7 @@ void O() // -> (S 21 ((36 K 44) | 44)) | (7 21 ((36 L 44) | 44))
                 sym = getsym();
             }   
             else
-                cout << "ERROR  '=' or ';' missing" << endl;
+                cout << "语法错误 未找到'='或';'" << endl;
         }
         else
         {
@@ -368,15 +320,14 @@ void O() // -> (S 21 ((36 K 44) | 44)) | (7 21 ((36 L 44) | 44))
                     cout << "语义错误 变量类型不匹配" << endl;
                     exit(0);
                 }
-                emit("=",V[i].name,(V[t].value.size())?V[t].value:V[t].name,"_");
-                i++;
+                emit("=","_",(V[t].value.size())?V[t].value:V[t].name,V[i++].name);
                 if(sym == 44)
                 {
                     cout << "';' succeed " << endl;
                     sym = getsym();
                 }
                 else    
-                    cout << "ERROR!  ';' missing" << endl;
+                    cout << "语法错误 未找到';'" << endl;
             }
             else if(sym == 44)
             {
@@ -385,7 +336,7 @@ void O() // -> (S 21 ((36 K 44) | 44)) | (7 21 ((36 L 44) | 44))
                 sym = getsym();
             }
             else
-                cout << "ERROR  '=' or ';' missing" << endl;
+                cout << "语法错误 未找到'='或';'" << endl;
         }
         else
         {
@@ -413,13 +364,13 @@ void R() // -> 21 36 (K|L)
                 t = K();
             if(V[num].type != V[t].type)
             {
-                cout << "语义错误 变量类型不匹配###" << endl;
+                cout << "语义错误 变量类型不匹配" << endl;
                 exit(0);
             }
-            emit("=",V[num].name,(V[t].value.size())?V[t].value:V[t].name,"_");
+            emit("=","_",(V[t].value.size())?V[t].value:V[t].name,V[num].name);
         }
         else
-            cout << "ERROR!  '=' missing" << endl;
+            cout << "语法错误 未找到'='" << endl;
     }
     else
         cout << "语法错误 未找到<变量名>" << endl;
@@ -429,7 +380,7 @@ void H() // -> R 44
 {
     if(sym == 21)
     {
-        cout << "<变量名> succeed " << endl;
+        cout << "<token> succeed " << endl;
         int num = get_num(); // 返回定义的变量在数组中存储的下标
         sym = getsym();
         if(sym == 36)
@@ -443,7 +394,7 @@ void H() // -> R 44
                 t = K();
             if(V[num].type != V[t].type)
             {
-                cout << "语义错误 变量类型不匹配!!!" << endl;
+                cout << "语义错误 变量类型不匹配" << endl;
                 exit(0);
             }
             if(sym == 44)
@@ -452,11 +403,11 @@ void H() // -> R 44
                 sym = getsym();
             }
             else
-                cout << "ERROR!  ';' missing" << endl;
-            emit("=",V[num].name,(V[t].value.size())?V[t].value:V[t].name,"_");
+                cout << "语法错误 未找到';'" << endl;
+            emit("=","_",(V[t].value.size())?V[t].value:V[t].name,V[num].name);
         }
         else
-            cout << "ERROR!  '=' missing" << endl;
+            cout << "语法错误 未找到'='" << endl;
     }
     else
         cout << "语法错误 未找到<变量名>" << endl;
@@ -479,11 +430,9 @@ void I() // -> 8 48 L 49 (G|B) (( 9 (G|B) ) | 空 )
                 sym = getsym();
             }
             else
-                cout << "ERROR!  ')' missing" << endl;
-            string label1 = "label" + num_str(count_label);
-            count_label++;
-            string label2 = "label" + num_str(count_label);
-            count_label++;
+                cout << "语法错误 未找到')'" << endl;
+            string label1 = "label" + num_str(count_label++);
+            string label2 = "label" + num_str(count_label++);
             emit("JZ",(V[t1].value.size())?V[t1].value:V[t1].name,"_",label1);
             if(sym==21||(sym>=3&&sym<=6)||sym==8||(sym==10||sym==11)||sym==2)
             {
@@ -512,10 +461,10 @@ void I() // -> 8 48 L 49 (G|B) (( 9 (G|B) ) | 空 )
             }
         }
         else    
-            cout << "ERROR!  '(' missing" << endl;
+            cout << "语法错误 未找到'('" << endl;
     }
     else
-        cout << "ERROR!  'if' missing" << endl; 
+        cout << "语法错误 未找到'if'" << endl; 
 }
 
 void J() // -> (10 48 L 49 B) | (11 48 (H|O) L 44 R 49 B)
@@ -530,11 +479,9 @@ void J() // -> (10 48 L 49 B) | (11 48 (H|O) L 44 R 49 B)
             sym = getsym();
         }
         else
-            cout << "ERROR! '(' missing" << endl;
-        string label1 = "label" + num_str(count_label);
-        count_label++;
-        string label2 = "label" + num_str(count_label);
-        count_label++;    
+            cout << "语法错误 未找到'('" << endl;
+        string label1 = "label" + num_str(count_label++); 
+        string label2 = "label" + num_str(count_label++);   
         emit(label1,"_","_","_");
         int t = L();
         if(sym == 49)
@@ -543,7 +490,7 @@ void J() // -> (10 48 L 49 B) | (11 48 (H|O) L 44 R 49 B)
             sym = getsym();
         }
         else
-            cout << "ERROR!  ')' missing" << endl;
+            cout << "语法错误 未找到')'" << endl;
         emit("JZ",(V[t].value.size())?V[t].value:V[t].name,"_",label2);
         B();
         emit("JP","_","_",label1);
@@ -559,19 +506,15 @@ void J() // -> (10 48 L 49 B) | (11 48 (H|O) L 44 R 49 B)
             sym = getsym();
         }
         else
-            cout << "ERROR!  '(' missing" << endl;
+            cout << "语法错误 未找到'('" << endl;
         if(sym == 21)
             H();
         else
             O();
-        string label1 = "label" + num_str(count_label); 
-        count_label++;
-        string label2 = "label" + num_str(count_label); 
-        count_label++;
-        string label3 = "label" + num_str(count_label); 
-        count_label++;
-        string label4 = "label" + num_str(count_label); 
-        count_label++;
+        string label1 = "label" + num_str(count_label++); 
+        string label2 = "label" + num_str(count_label++); 
+        string label3 = "label" + num_str(count_label++); 
+        string label4 = "label" + num_str(count_label++); 
         emit(label1,"_","_","_");
         int t = L();
         if(sym == 44)
@@ -580,7 +523,7 @@ void J() // -> (10 48 L 49 B) | (11 48 (H|O) L 44 R 49 B)
             sym = getsym();
         }
         else    
-            cout << "ERROR!  ';' missing" << endl;
+            cout << "语法错误 未找到';'" << endl;
         emit("JZ",(V[t].value.size())?V[t].value:V[t].name,"_",label4);
         emit("JP","_","_",label2);
         emit(label3,"_","_","_");
@@ -592,7 +535,7 @@ void J() // -> (10 48 L 49 B) | (11 48 (H|O) L 44 R 49 B)
             sym = getsym();
         }
         else
-            cout << "ERROR!  ')' missing" << endl;
+            cout << "语法错误 未找到')'" << endl;
         emit(label2,"_","_","_");
         B();
         emit("JP","_","_",label3);
@@ -615,7 +558,7 @@ void Q() // -> 2 (L|K) 44
             sym = getsym();
         }
         else
-            cout << "ERROR!  ';' missing" << endl;
+            cout << "语法错误 未找到';'" << endl;
         emit("return",(V[t].value.size())?V[t].value:V[t].name,"_","_");
     }
     else
@@ -634,8 +577,7 @@ int L() // -> W (57 W)*
         V[j].name = "tmp" + num_str(1000-j);
         V[j].type = V[t].type;
         int t3 = t;
-        t = j;
-        j--;
+        t = j--;
         emit("|",(V[t3].value.size())?V[t3].value:V[t3].name,(V[t2].value.size())?V[t2].value:V[t2].name,V[t].name);
     }
     return t;
@@ -653,8 +595,7 @@ int W() // -> X (56 X)*
         V[j].name = "tmp" + num_str(1000-j);
         V[j].type = V[t].type;
         int t3 = t;
-        t = j;
-        j--;
+        t = j--;
         emit("&",(V[t3].value.size())?V[t3].value:V[t3].name,(V[t2].value.size())?V[t2].value:V[t2].name,V[t].name);
     }
     return t;
@@ -687,7 +628,7 @@ int X() // -> (48 L 49) | (K relop K) | K
         {
             cout << "<relop> succeed " << endl;
             int op = sym;
-            sym =getsym();
+            sym = getsym();
             int t2; 
             if(sym==14 || sym==15)
                 t2 = P(); // !!!!??
@@ -695,8 +636,7 @@ int X() // -> (48 L 49) | (K relop K) | K
                 t2 = K();
             V[j].name = "tmp" + num_str(1000-j);
             V[j].type = V[t1].type;
-            int t3 = j; // 中间变量
-            j--;
+            int t3 = j--; // 中间变量
             switch(V[t2].type)
             {
                 case 3:
@@ -829,7 +769,7 @@ int U() // -> (48 K 49) | (21|22|23)
             sym = getsym();
         }
         else
-            cout << "ERROR!  ')' missing" << endl;
+            cout << "语法错误 未找到')'" << endl;
     }
     else if(sym>=21 || sym<=23)
         t = P();
@@ -850,8 +790,7 @@ int P() // -> 21|22|23|14|15
         {
             V[1000+reg].value = code_str[x-1];
             V[1000+reg].type = sym - 18; // 22-18=4 -> int  23-18=5 -> double
-            num = 1000 + reg; // 返回的是存储大数组该元素的下标
-            reg++;
+            num = 1000 + reg++; // 返回的是存储大数组该元素的下标
         }
         sym = getsym();
         return num;
@@ -861,8 +800,7 @@ int P() // -> 21|22|23|14|15
         cout << "'true' or 'false' succeed " << endl;
         V[1000+reg].value = code_str[x-1];
         V[1000+reg].type = 7; // bool类型
-        num = 1000 + reg;
-        reg++;
+        num = 1000 + reg++;
         sym = getsym();
         return num;
     } 
