@@ -1,0 +1,40 @@
+定义变量: 
+n int 5
+sum int 153
+factorial int 120
+i int 6
+
+中间变量:
+tmp1 int 5
+tmp2 int 0
+tmp3 int 1
+tmp4 int 1
+tmp5 bool true
+tmp6 int 1
+tmp7 int 1
+tmp8 int 1
+tmp9 int 2
+tmp10 bool true
+tmp11 int 2
+tmp12 int 3
+tmp13 int 1
+tmp14 int 3
+tmp15 bool true
+tmp16 int 6
+tmp17 int 9
+tmp18 int 1
+tmp19 int 4
+tmp20 bool true
+tmp21 int 24
+tmp22 int 33
+tmp23 int 1
+tmp24 int 5
+tmp25 bool true
+tmp26 int 120
+tmp27 int 153
+tmp28 int 1
+tmp29 int 6
+tmp30 bool false
+
+运行结果: 
+153
